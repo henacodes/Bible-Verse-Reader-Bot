@@ -17,7 +17,13 @@ bot.use(session({ initial: initialState }));
 bot.api.setMyCommands(commands);
 bot.command("start", (ctx) => {
   ctx.reply(
-    "Welcome to Bible verse reader. \n To find a specific verse please send /read"
+    "Get daily inspiration from the Word of God. Let our bot deliver a new Bible verse to you every day, and start your day with hope, faith, and guidance. \n To find a specific verse please send /read"
+  );
+});
+
+bot.command("help", (ctx) => {
+  ctx.reply(
+    `I am a bot to help you find bible verses from your confort of telegram \n /start -  to start your bot \n /read - to read a verse \n /cancel - to cancel your current session of read  `
   );
 });
 
@@ -42,6 +48,17 @@ bot.command("read", (ctx) => {
   });
 });
 
+bot.command("cancel", (ctx) => {
+  ctx.session = initialState();
+
+  ctx.reply("Session resotored. send /read to read a new verse");
+});
+
+bot.command("about", (ctx) => {
+  ctx.reply(
+    "Get daily inspiration from the Word of God. Let our bot deliver a new Bible verse to you every day, and start your day with hope, faith, and guidance. \n\n\n Get my developer here @HenaCodes "
+  );
+});
 bot.callbackQuery("ot", (ctx) => {
   ctx.deleteMessage();
   ctx.session.cat = "ot";
