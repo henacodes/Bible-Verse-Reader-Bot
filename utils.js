@@ -10,6 +10,13 @@ export const initialState = () => {
   };
 };
 
+export const commands = [
+  { command: "start", description: "Start the bot" },
+  { command: "read", description: "read bible verse" },
+  { command: "help", description: "Get help with the bot" },
+  { command: "about", description: "Info about the bot" },
+];
+
 export const readVerse = (ctx, book, chapter, verse) => {
   // Read the JSON file
   fs.readFile(`./data/${book}.json`, "utf8", (err, data) => {
@@ -28,7 +35,12 @@ export const readVerse = (ctx, book, chapter, verse) => {
     }
     const scriptureVerse =
       jsonData.chapters[chapter - 1].verses[verse - 1].text;
-    return ctx.reply(scriptureVerse);
+    return ctx.reply(
+      ` <b>${book.toUpperCase()}   ${chapter}:${verse} </b> \n\n\n${scriptureVerse}\n\n\n\n\n read the bible inside telegram @bible_verse_reader_bot`,
+      {
+        parse_mode: "HTML",
+      }
+    );
   });
 };
 

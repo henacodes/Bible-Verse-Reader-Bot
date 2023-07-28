@@ -6,12 +6,15 @@ import {
   initialState,
   OtBooksKeyboard,
   NtBooksKeyboard,
+  commands,
 } from "./utils.js";
 dotenv.config();
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
 bot.use(session({ initial: initialState }));
+
+bot.api.setMyCommands(commands);
 bot.command("start", (ctx) => {
   ctx.reply(
     "Welcome to Bible verse reader. \n To find a specific verse please send /read"
@@ -40,6 +43,7 @@ bot.command("read", (ctx) => {
 });
 
 bot.callbackQuery("ot", (ctx) => {
+  ctx.deleteMessage();
   ctx.session.cat = "ot";
 
   ctx.reply("Choose from OT Books", {
@@ -50,8 +54,8 @@ bot.callbackQuery("ot", (ctx) => {
 });
 
 bot.callbackQuery("nt", (ctx) => {
+  ctx.deleteMessage();
   ctx.session.cat = "nt";
-
   ctx.reply("Choose from NT Books", {
     reply_markup: {
       inline_keyboard: NtBooksKeyboard,
@@ -65,12 +69,13 @@ bot.callbackQuery("book", (ctx) => {
 });
 
 bot.on("callback_query", (ctx) => {
+  ctx.deleteMessage();
   const book = ctx.callbackQuery.data.split(" ")[1];
   ctx.session.book = book;
   ctx.reply(`Okay. what chapter do you wanna open from the book of ${book} `);
 });
 
-bot.on("message:text", (ctx) => {
+bot.on("message:text", async (ctx) => {
   const text = ctx.message.text;
   const { book, chapter } = ctx.session;
   const hasLetters = /[a-zA-Z]/.test(text);
@@ -80,6 +85,7 @@ bot.on("message:text", (ctx) => {
     } else {
       if (chapter) {
         readVerse(ctx, book, chapter, parseInt(text));
+        ctx.session = initialState();
       } else {
         ctx.session.chapter = parseInt(text);
         ctx.reply(
@@ -95,14 +101,3 @@ bot.on("message:text", (ctx) => {
 });
 
 bot.start();
-/* 
-fs.readFile(`./data/1john.json`, "utf8", (err, data) => {
-  if (err) {
-    return ctx.reply(err.message);
-  }
-
-  // Parse the JSON data
-  const jsonData = JSON.parse(data);
-  console.log(jsonData);
-});
- */
