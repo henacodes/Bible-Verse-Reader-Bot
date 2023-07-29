@@ -19,7 +19,7 @@ export const commands = [
 
 export const readVerse = (ctx, book, chapter, verse) => {
   // Read the JSON file
-  fs.readFile(`./data/${book}.json`, "utf8", (err, data) => {
+  fs.readFile(`../data/${book}.json`, "utf8", (err, data) => {
     if (err) {
       return ctx.reply(err.message);
     }
