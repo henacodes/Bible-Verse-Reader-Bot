@@ -30,7 +30,7 @@ export const readVerse = (ctx, book, chapter, verse) => {
       verse > jsonData.chapters[chapter - 1].verses.length
     ) {
       return ctx.reply(
-        "the chapter or the verse you just gave is not available.\n Check if you gave the right chap"
+        "the chapter or the verse you just gave is not available.\n Check if you gave the right chapter \n Send /read to try again"
       );
     }
     const scriptureVerse =
