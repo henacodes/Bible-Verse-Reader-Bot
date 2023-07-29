@@ -1,5 +1,5 @@
 import fs from "fs";
-
+import path from "path";
 export const initialState = () => {
   return {
     cat: null,
@@ -19,7 +19,8 @@ export const commands = [
 
 export const readVerse = (ctx, book, chapter, verse) => {
   // Read the JSON file
-  fs.readFile(`../data/${book}.json`, "utf8", (err, data) => {
+  const filePath = path.join(__dirname, "data", `${book}.json`);
+  fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
       return ctx.reply(err.message);
     }
